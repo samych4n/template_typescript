@@ -2,7 +2,7 @@
   "name": "mutantbr",
   "version": "1.0.0",
   "description": "Prova MutantBr 05/2019",
-  "main": "./index.js",
+  "main": "./Javascript/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
