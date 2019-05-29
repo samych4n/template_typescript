@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const JsonPlaceholder_1 = require("../../JsonPlaceholder");
 const endpoint_1 = require("../_interfaces/endpoint");
-class getSearch extends endpoint_1.DefaultEndpoint {
+class getSearch extends endpoint_1.LogEndpoint {
     validacaoDeDadosDeEntrada(...args) {
         return __awaiter(this, void 0, void 0, function* () {
             return;

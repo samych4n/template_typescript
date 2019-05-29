@@ -1,10 +1,10 @@
 import { Jsonplaceholder } from "../../JsonPlaceholder";
 import { info } from "../_interfaces/info";
-import { DefaultEndpoint } from "../_interfaces/endpoint";
+import { LogEndpoint } from "../_interfaces/endpoint";
 
 
 
-export class getInfo extends DefaultEndpoint{
+export class getInfo extends LogEndpoint{
     protected async validacaoDeDadosDeEntrada(...args:any): Promise<void> {
         return;
     }    

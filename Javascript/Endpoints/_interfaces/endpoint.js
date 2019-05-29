@@ -7,8 +7,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const sendResponse_1 = require("../../Express/sendResponse");
+const Elasticsearch_1 = require("../../Elasticsearch");
+const moment_1 = __importDefault(require("moment"));
+require("moment-timezone");
 class DefaultEndpoint {
     constructor(req, res, next, localCache, globalCache) {
         this.req = req;
@@ -54,3 +60,50 @@ class DefaultEndpoint {
     ;
 }
 exports.DefaultEndpoint = DefaultEndpoint;
+class LogEndpoint extends DefaultEndpoint {
+    constructor(req, res, next, localCache, globalCache, method, endpointName) {
+        super(req, res, next, localCache, globalCache);
+        this.req = req;
+        this.res = res;
+        this.next = next;
+        this.localCache = localCache;
+        this.globalCache = globalCache;
+        this.method = method;
+        this.endpointName = endpointName;
+        this.logInsert = undefined;
+        this.startTime = "";
+        let { body, params, query } = req;
+        this.startTime = moment_1.default().tz("UTC").format('YYYY-MM-DD HH:mm:ss');
+        this.Log({ method, endpointName, body, params, query, startTime: this.startTime });
+    }
+    Log(saveInfo) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let logInsert = yield this.logInsert;
+            let logId = logInsert && typeof logInsert._id === "string" ? logInsert._id : undefined;
+            this.logInsert = yield Elasticsearch_1.insertLog(saveInfo, logId);
+            yield Elasticsearch_1.search();
+        });
+    }
+    sendResponse(...args) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let { body, params, query } = this.req;
+            this.method,
+                this.endpointName;
+            let endTime = moment_1.default().tz("UTC").format('YYYY-MM-DD HH:mm:ss');
+            yield this.Log({
+                method: this.method,
+                endpointName: this.endpointName,
+                body,
+                params,
+                query,
+                startTime: this.startTime,
+                endTime,
+                responseCode: this.response.code,
+                response: this.response.body
+            });
+            yield sendResponse_1.sendResponse(this.res, this.response.code, this.response.body);
+        });
+    }
+    ;
+}
+exports.LogEndpoint = LogEndpoint;

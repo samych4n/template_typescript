@@ -1,11 +1,11 @@
 import { Jsonplaceholder } from "../../JsonPlaceholder";
-import { DefaultEndpoint } from "../_interfaces/endpoint";
+import { LogEndpoint } from "../_interfaces/endpoint";
 
 interface searchWords{
     [index:string]:string|searchWords;
 }
 
-export class getSearch extends DefaultEndpoint{
+export class getSearch extends LogEndpoint{
     protected async validacaoDeDadosDeEntrada(...args:any): Promise<void> {
         return;
     }    
